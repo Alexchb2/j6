@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MoneyTransferTest {
     int sum;
-    int Balance1;
-    int Balance2;
+    int balance1;
+    int balance2;
 
     int endBalance1;
     int endBalance2;
@@ -28,29 +28,29 @@ public class MoneyTransferTest {
         val verificationPage = loginPage.validLogin(authInfo);
         val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
         dashboardPage = verificationPage.validVerify(verificationCode);
-        Balance1 = dashboardPage.getCardBalance(dashboardPage.card1);
-        Balance2 = dashboardPage.getCardBalance(dashboardPage.card2);
+        balance1 = dashboardPage.getFirstCardBalance();
+        balance2 = dashboardPage.getSecondCardBalance();
     }
 
     @Test
     void shouldTransferMoneyFromFirstToSecondCard() {
         sum = 500;
-        val transfer = dashboardPage.clickCard(dashboardPage.card2);
+        val transfer = dashboardPage.clickSecondCard();
         val dashboardPage2 = transfer.validTransfer(Integer.toString(sum), String.valueOf(DataHelper.getCardFirst()));
-        endBalance1 = dashboardPage2.getCardBalance(dashboardPage2.card1);
-        endBalance2 = dashboardPage2.getCardBalance(dashboardPage2.card2);
-        assertEquals(Balance1 - sum, endBalance1);
-        assertEquals(Balance2 + sum, endBalance2);
+        endBalance1 = dashboardPage2.getFirstCardBalance();
+        endBalance2 = dashboardPage2.getSecondCardBalance();
+        assertEquals(balance1 - sum, endBalance1);
+        assertEquals(balance2 + sum, endBalance2);
     }
 
     @Test
     void shouldTransferMoneyFromSecondToFirstCard() {
         sum = 500;
-        val transfer = dashboardPage.clickCard(dashboardPage.card1);
+        val transfer = dashboardPage.clickFirstCard();
         val dashboardPage2 = transfer.validTransfer(Integer.toString(sum), String.valueOf(DataHelper.getCardSecond()));
-        endBalance1 = dashboardPage2.getCardBalance(dashboardPage2.card1);
-        endBalance2 = dashboardPage2.getCardBalance(dashboardPage2.card2);
-        assertEquals(Balance1 + sum, endBalance1);
-        assertEquals(Balance2 - sum, endBalance2);
+        endBalance1 = dashboardPage2.getFirstCardBalance();
+        endBalance2 = dashboardPage2.getSecondCardBalance();
+        assertEquals(balance1 + sum, endBalance1);
+        assertEquals(balance2 - sum, endBalance2);
     }
 }
