@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
 import ru.netology.web.page.DashboardPage;
 import ru.netology.web.page.LoginPage;
+import ru.netology.web.page.Transfer;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,5 +53,17 @@ public class MoneyTransferTest {
         endBalance2 = dashboardPage2.getSecondCardBalance();
         assertEquals(balance1 + sum, endBalance1);
         assertEquals(balance2 - sum, endBalance2);
+    }
+
+    @Test
+    void shouldTransferMoneyLargeLimitAmounts() {
+        sum = balance2 + 1;
+        val transfer = dashboardPage.clickFirstCard();
+        val dashboardPage2 = transfer.validTransfer(Integer.toString(sum), String.valueOf(DataHelper.getCardSecond()));
+        transfer.findErrorMessage("Сумма перевода превышает сумму остатка денег на счёте.");
+        endBalance1 = dashboardPage2.getFirstCardBalance();
+        endBalance2 = dashboardPage2.getSecondCardBalance();
+        assertEquals(balance1, endBalance1);
+        assertEquals(balance2, endBalance2);
     }
 }
